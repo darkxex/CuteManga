@@ -109,6 +109,7 @@ bool helppage = false;
 bool existfoldermain = true;
 int basexmain = 20;
 int baseymain = 20;
+bool cascadeactivated = false;
 //Texture wrapper class
 class LTexture
 {
@@ -588,13 +589,12 @@ void downloadfile(std::string enlace, std::string directorydown)
 
 
 
-	
-
-
-
-
 std::vector<std::string> arraymain;
-	std::vector<std::string> arraychapter;
+std::vector<std::string> arraychapter;
+
+
+
+
 int main(int argc, char **argv)
 
 {
@@ -700,6 +700,9 @@ int main(int argc, char **argv)
 	std::string foldermain = "C:/respaldo2017/C++/CuteManga/Debug/";
 	
 #endif // SWITCH
+
+	
+
 	arraymain.clear();
 	DIR *dirmain;
 	struct dirent *entmain;
@@ -1043,7 +1046,6 @@ int main(int argc, char **argv)
 				switch (statenow)
 				{
 				case readmanga:
-
 					if (cascade == false)
 					{
 						basey = 0;
@@ -1083,18 +1085,20 @@ int main(int argc, char **argv)
 					Pagemanga.loadFromFile(arraychapter[selectpage]);
 					arraypage.resize(arraychapter.size());
 
-					for (int x = 0; x < arraychapter.size(); x++)
+					if (cascadeactivated == true)
 					{
-						arraypage[x].loadFromFile(arraychapter[x]);
+						for (int x = 0; x < arraychapter.size(); x++)
+						{
+							arraypage[x].loadFromFile(arraychapter[x]);
+						}
 					}
 					std::cout << arraypage.size() << std::endl;
 					statenow = readmanga;
 					helppage = true;
-
-
 					break;
 				}
 			}
+
 
 		}
 
@@ -1103,33 +1107,41 @@ int main(int argc, char **argv)
 			switch (statenow)
 			{
 			case readmanga:
-				if (cascademode < 2)
-
+				if (cascadeactivated == true)
 				{
-					cascademode++;
-				}
-				else { cascademode = 0; }
+					if (cascademode < 2)
+
+					{
+						cascademode++;
+					}
+					else { cascademode = 0; }
 
 
-				if (cascademode == 1)
-				{
-					separation = false;
-					cascade = true;
-				}
-				if (cascademode == 2)
-				{
-					cascade = true;
-					separation = true;
-				}
-				if (cascademode == 0)
-				{
+					if (cascademode == 1)
+					{
+						separation = false;
+						cascade = true;
+					}
+					if (cascademode == 2)
+					{
+						cascade = true;
+						separation = true;
+					}
+					if (cascademode == 0)
+					{
 
-					cascade = false;
-					separation = false;
-					basex = 0;
-					basey = 0;
+						cascade = false;
+						separation = false;
+						basex = 0;
+						basey = 0;
+					}
+					std::cout << cascademode << std::endl;
 				}
-				std::cout << cascademode << std::endl;
+
+
+				break;
+			case selectmanga:
+				cascadeactivated = !cascadeactivated;
 				break;
 			}
 		}
@@ -1317,10 +1329,11 @@ int main(int argc, char **argv)
 							Pagemanga.loadFromFile(arraychapter[selectpage]);
 							arraypage.resize(arraychapter.size());
 
-							for (int x = 0; x < arraychapter.size(); x++)
+							if (cascadeactivated == true)
+							{for (int x = 0; x < arraychapter.size(); x++)
 							{
 								arraypage[x].loadFromFile(arraychapter[x]);
-							}
+							}}
 							std::cout << arraypage.size() << std::endl;
 							statenow = readmanga;
 							helppage = true;
@@ -1330,6 +1343,8 @@ int main(int argc, char **argv)
 
 
 					break;
+
+				
 				case SDLK_MINUS:
 					switch (statenow)
 					{
@@ -1441,33 +1456,41 @@ int main(int argc, char **argv)
 					switch (statenow)
 					{
 					case readmanga:
-						if (cascademode < 2)
-
+						if (cascadeactivated == true)
 						{
-							cascademode++;
-						}
-						else { cascademode = 0; }
+							if (cascademode < 2)
+
+							{
+								cascademode++;
+							}
+							else { cascademode = 0; }
 
 
-						if (cascademode == 1)
-						{
-							separation = false;
-							cascade = true;
-						}
-						if (cascademode == 2)
-						{
-							cascade = true;
-							separation = true;
-						}
-						if (cascademode == 0)
-						{
+							if (cascademode == 1)
+							{
+								separation = false;
+								cascade = true;
+							}
+							if (cascademode == 2)
+							{
+								cascade = true;
+								separation = true;
+							}
+							if (cascademode == 0)
+							{
 
-							cascade = false;
-							separation = false;
-							basex = 0;
-							basey = 0;
+								cascade = false;
+								separation = false;
+								basex = 0;
+								basey = 0;
+							}
+							std::cout << cascademode << std::endl;
 						}
-						std::cout << cascademode << std::endl;
+						
+
+						break;
+					case selectmanga:
+						cascadeactivated = !cascadeactivated;
 						break;
 					}
 					break;
@@ -1675,8 +1698,16 @@ int main(int argc, char **argv)
 				SDL_Rect fillRect = { SCREEN_WIDTH / 2 +100, SCREEN_HEIGHT / 2 +120  , 500, 200 };
 				SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 255);
 				SDL_RenderFillRect(gRenderer, &fillRect);
-				gTextTexture.loadFromRenderedText(gFont, "Press \"X\" for Cascade Mode (Separation or not).", { 0, 0, 0 });
-				gTextTexture.render(SCREEN_WIDTH / 2 - gTextTexture.getWidth() / 2 +350, (SCREEN_HEIGHT / 2 - gTextTexture.getHeight() / 2) +150);
+				if (cascadeactivated == true)
+				{
+					gTextTexture.loadFromRenderedText(gFont, "Press \"X\" for Cascade Mode (Separation or not).", { 0, 0, 0 });
+					gTextTexture.render(SCREEN_WIDTH / 2 - gTextTexture.getWidth() / 2 + 350, (SCREEN_HEIGHT / 2 - gTextTexture.getHeight() / 2) + 150);
+				}
+				else
+				{
+					gTextTexture.loadFromRenderedText(gFont, "Cascade is disabled, enable it in the Main Menu.", { 0, 0, 0 });
+					gTextTexture.render(SCREEN_WIDTH / 2 - gTextTexture.getWidth() / 2 + 350, (SCREEN_HEIGHT / 2 - gTextTexture.getHeight() / 2) + 150);
+				}
 				gTextTexture.loadFromRenderedText(gFont, "Press \"A\" for Fit Mode (On/Off).", { 0, 0, 0 });
 				gTextTexture.render(SCREEN_WIDTH / 2 - gTextTexture.getWidth() / 2 + 350, 30 + (SCREEN_HEIGHT / 2 - gTextTexture.getHeight() / 2) +150);
 				gTextTexture.loadFromRenderedText(gFont, "Press \"L\" for Previous page and \"R\" for Next page.", { 0, 0, 0 });
@@ -1742,8 +1773,16 @@ int main(int argc, char **argv)
 			SDL_RenderFillRect(gRenderer, &fillRect); }
 
 			textColor = { 50, 50, 50 };
-			gTextTexture.loadFromRenderedText(gFont, " Press \"A\" to read folder. ", textColor);
-			gTextTexture.render(basexmain, SCREEN_HEIGHT - 30);
+			if (cascadeactivated == false)
+			{
+				gTextTexture.loadFromRenderedText(gFont, "\"A\" to read folder - \"X\" for Enable Cascade Mode (Load slow and High Memory use). ", textColor);
+				gTextTexture.render(basexmain, SCREEN_HEIGHT - 30);
+			}
+			else
+			{
+				gTextTexture.loadFromRenderedText(gFont, "\"A\" to read folder - \"X\" for Disable Cascade Mode (Instant load and Low Memory use). ", textColor);
+				gTextTexture.render(basexmain, SCREEN_HEIGHT - 30);
+			}
 
 
 		
@@ -1761,8 +1800,8 @@ int main(int argc, char **argv)
 
 
 	}
-
-
+	
+	
 
 	//Free resources and close SDL
 #ifdef __SWITCH__
