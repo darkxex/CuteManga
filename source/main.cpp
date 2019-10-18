@@ -1095,6 +1095,7 @@ int main(int argc, char **argv)
 					std::cout << arraypage.size() << std::endl;
 					statenow = readmanga;
 					helppage = true;
+
 					break;
 				}
 			}
@@ -1179,6 +1180,7 @@ int main(int argc, char **argv)
 				basey = 0;
 				neutralsize = 1;
 				zoom = 1;
+				selectpage = 0;
 				break;
 			case selectmanga:
 
@@ -1375,6 +1377,7 @@ int main(int argc, char **argv)
 						basey = 0;
 						neutralsize = 1;
 						zoom = 1;
+						selectpage = 0;
 						break;
 					case selectmanga:
 
