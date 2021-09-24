@@ -85,7 +85,7 @@ bool	isFileExist(const char *file)
 	return (true);
 }
 
-//////////////////////////////////aquí empieza el pc.
+//////////////////////////////////aquï¿½ empieza el pc.
 //Screen dimension constants
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -753,6 +753,14 @@ int main(int argc, char **argv)
 			return -1;
 		}
 	}
+
+
+	  // Configure our supported input layout: a single player with standard controller styles
+    padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+
+    // Initialize the default gamepad (which reads handheld mode inputs as well as the first connected controller)
+    PadState pad;
+    padInitializeDefault(&pad);
 #endif // SWITCH
 
 	
@@ -767,22 +775,26 @@ int main(int argc, char **argv)
 		
 		
 #ifdef __SWITCH__
-		//Scan all the inputs. This should be done once for each frame
-		hidScanInput();
+		 // Scan the gamepad. This should be done once for each frame
+        padUpdate(&pad);
 
-		//hidKeysDown returns information about which buttons have been just pressed (and they weren't in the previous frame)
-		u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
-		//hidKeysHeld returns information about which buttons have are held down in this frame
-		u64 kHeld = hidKeysHeld(CONTROLLER_P1_AUTO);
-		//hidKeysUp returns information about which buttons have been just released
-		u64 kUp = hidKeysUp(CONTROLLER_P1_AUTO);
+        // padGetButtonsDown returns the set of buttons that have been
+        // newly pressed in this frame compared to the previous one
+        u64 kDown = padGetButtonsDown(&pad);
 
-		if (kDown & KEY_PLUS)
+        // padGetButtons returns the set of buttons that are currently pressed
+        u64 kHeld = padGetButtons(&pad);
+
+        // padGetButtonsUp returns the set of buttons that have been
+        // newly released in this frame compared to the previous one
+        u64 kUp = padGetButtonsUp(&pad);
+
+		if (kDown & HidNpadButton_Plus)
 		{
 			quit = 1;
 			
 		}
-		if (kHeld & KEY_LSTICK_DOWN)
+		if (kHeld & HidNpadButton_StickLDown)
 		{
 			switch (statenow)
 			{
@@ -808,7 +820,7 @@ int main(int argc, char **argv)
 			}
 
 		}
-		if (kDown & KEY_LSTICK_DOWN)
+		if (kDown & HidNpadButton_StickLDown)
 		{
 			switch (statenow)
 			{
@@ -831,7 +843,7 @@ int main(int argc, char **argv)
 			}
 
 		}
-		if (kHeld & KEY_LSTICK_UP)
+		if (kHeld & HidNpadButton_StickLUp)
 		{
 			switch (statenow)
 			{
@@ -862,7 +874,7 @@ int main(int argc, char **argv)
 			}
 
 		}
-		if (kDown & KEY_LSTICK_UP)
+		if (kDown & HidNpadButton_StickLUp)
 		{
 			switch (statenow)
 			{
@@ -881,7 +893,7 @@ int main(int argc, char **argv)
 			}
 
 		}
-		if (kHeld & KEY_LSTICK_LEFT)
+		if (kHeld & HidNpadButton_StickLLeft)
 		{
 
 			switch (statenow)
@@ -901,7 +913,7 @@ int main(int argc, char **argv)
 
 		}
 
-		if (kHeld & KEY_LSTICK_RIGHT)
+		if (kHeld & HidNpadButton_StickLRight)
 		{
 			switch (statenow)
 			{
@@ -916,7 +928,7 @@ int main(int argc, char **argv)
 
 		}
 
-		if (kHeld & KEY_ZL)
+		if (kHeld & HidNpadButton_ZL)
 		{
 			switch (statenow)
 			{
@@ -928,7 +940,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		if (kHeld & KEY_ZR)
+		if (kHeld & HidNpadButton_ZR)
 		{
 			switch (statenow)
 			{
@@ -940,7 +952,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		if (kDown & KEY_L)
+		if (kDown & HidNpadButton_L)
 		{
 			switch (statenow)
 			{
@@ -976,7 +988,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		if (kDown & KEY_R)
+		if (kDown & HidNpadButton_R)
 		{
 			switch (statenow)
 			{
@@ -1005,7 +1017,7 @@ int main(int argc, char **argv)
 
 		}
 
-		if (kDown & KEY_RSTICK)
+		if (kDown & HidNpadButton_StickR)
 		{
 
 			switch (statenow)
@@ -1040,7 +1052,7 @@ int main(int argc, char **argv)
 
 		}
 
-		if (kDown & KEY_A)
+		if (kDown & HidNpadButton_A)
 		{
 			if (existfoldermain == true) {
 				switch (statenow)
@@ -1103,7 +1115,7 @@ int main(int argc, char **argv)
 
 		}
 
-		if (kDown & KEY_X)
+		if (kDown & HidNpadButton_X)
 		{
 			switch (statenow)
 			{
@@ -1147,7 +1159,7 @@ int main(int argc, char **argv)
 			}
 		}
 
-		if (kDown & KEY_LSTICK)
+		if (kDown & HidNpadButton_StickL)
 		{
 			switch (statenow)
 			{
@@ -1161,7 +1173,7 @@ int main(int argc, char **argv)
 			}
 		}
 		
-		if (kDown & KEY_B)
+		if (kDown & HidNpadButton_B)
 		{
 			switch (statenow)
 			{
