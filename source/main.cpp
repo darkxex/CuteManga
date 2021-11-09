@@ -17,7 +17,7 @@
 #include <iostream>
 #include <string>
 #include <curl/curl.h>
-
+#include <algorithm>
 #include <math.h> 
 
 #include <errno.h>
@@ -1085,6 +1085,9 @@ int main(int argc, char **argv)
 							if (namefile.find(".jpg") != -1 || namefile.find(".jpeg") != -1 || namefile.find(".png") != -1 || namefile.find(".bmp") != -1 || namefile.find(".gif") != -1 || namefile.find(".webp") != -1)
 								arraychapter.push_back(foldertoread + namefile);
 						}
+						
+
+						std::sort(arraychapter.begin(),arraychapter.end()); //Use the start and end like this
 						closedir(dir);
 					}
 					else {
