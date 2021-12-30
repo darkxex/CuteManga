@@ -720,6 +720,7 @@ int main(int argc, char **argv)
 				arraymain.push_back(namefile);
 			}
 		}
+		std::sort(arraymain.begin(),arraymain.end()); //Use the start and end like this
 		closedir(dirmain);
 	}
 	else {
