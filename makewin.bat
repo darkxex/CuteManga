@@ -1,2 +1,2 @@
 make
-nxlink -a 192.18.0.7 -s "out/CuteManga.nro" 
+nxlink -a 192.168.0.9 -s "out/CuteManga.nro" 
